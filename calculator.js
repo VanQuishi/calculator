@@ -35,6 +35,7 @@ const clear = document.querySelector('.clear');
 const clearAll = document.querySelector('.clearAll');
 const equalSign = document.querySelector('.equalSign');
 var expression;
+var expressionPostfix;
 var currentDisplay;
 var solution;
 
@@ -59,11 +60,13 @@ clearAll.addEventListener('click', (e) =>
 });
 
 equalSign.addEventListener('click',(e) => {
-    display.textContent += equalSign.textContent;
     expression = display.textContent;
     console.log(expression);
-    solution = processExpression(expression);
-    console.log(solution);
+    display.textContent += equalSign.textContent;
+    expressionPostfix = infixToPostfix(expression);
+    console.log("This is the postfix: " + expressionPostfix);
+    //solution = processExpression(expression);
+    //console.log(solution);
 });
 
 function isOperator (character) {
@@ -87,7 +90,61 @@ function hasHigherPrecedence (currentOp, stackOp) {
     return false;
 }
 
-function processExpression(expression) {
+function infixToPostfix (infix) {
+
+    let postfix ='';
+    let temp = '';
+    let opArr = [];
+
+    for (let i = 0; i < infix.length; i++) {
+
+        if (!isOperator(infix[i])) {
+            temp += infix[i];
+        }
+
+        else {
+
+            if (temp != '') {
+                postfix += temp + ' ';
+                temp = '';
+            }
+            
+            while (opArr.length >= 0) {
+
+                if (opArr.length == 0) {
+                    opArr.push(infix[i]);
+                    break;
+                }
+
+                else {
+                    if (hasHigherPrecedence(infix[i], peak(opArr))) {
+                        opArr.push(infix[i]);
+                        break;
+                    }
+    
+                    else {
+                        postfix += opArr.pop() + ' ';
+                    }
+                }
+
+            }
+            
+        }
+    }
+
+    if (temp != '') {
+        postfix += temp + ' ';
+    }
+
+    while (opArr.length != 0) {
+        postfix += opArr.pop() + ' ';
+    }
+
+    return postfix;
+
+}
+
+/*function processExpression(expression) {
 
     //check if the expression has a number before equal sign or not
     //this check prevents invalid expression from user
@@ -185,10 +242,10 @@ function processExpression(expression) {
         console.log("inserting in numArr: " + result);
     }*/
 
-    return result;
+    //return result;
 
    
-}
+//}
 
 /*let test = [0,1,2];
 console.log(peak(test));*/
