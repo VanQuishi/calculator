@@ -29,11 +29,14 @@ function operate (a,operator,b) {
     }
 }
 
+const displayPrevious = document.querySelector('.displayPrevious');
 const display = document.querySelector('.display');
 const buttons = document.querySelectorAll('.btn');
 const clear = document.querySelector('.clear');
 const clearAll = document.querySelector('.clearAll');
 const equalSign = document.querySelector('.equalSign');
+const operator = document.querySelectorAll('.operator');
+
 var expression;
 var expressionPostfix;
 var currentDisplay;
@@ -60,13 +63,34 @@ clearAll.addEventListener('click', (e) =>
 });
 
 equalSign.addEventListener('click',(e) => {
-    expression = display.textContent;
-    console.log(expression);
-    display.textContent += equalSign.textContent;
-    expressionPostfix = infixToPostfix(expression);
-    console.log("This is the postfix: " + expressionPostfix);
-    //solution = processExpression(expression);
-    //console.log(solution);
+
+    if (display.textContent == '') {
+        alert("No expression detected. Please enter a valid expression");
+    }
+
+    else {
+
+        if (displayPrevious.textContent != '') {
+            displayPrevious.textContent = '';
+        }
+
+        expression = display.textContent;
+        console.log(expression);
+
+        display.textContent += equalSign.textContent;
+
+        expressionPostfix = infixToPostfix(expression);
+        console.log("This is the postfix: " + expressionPostfix);
+
+        solution = processExpression(expressionPostfix);
+        console.log(solution);
+
+        displayPrevious.textContent += display.textContent;
+        display.textContent = solution;
+
+    }
+    
+
 });
 
 function isOperator (character) {
@@ -82,12 +106,17 @@ function peak(arr) {
     return arr[arr.length - 1];
 }
 
-function hasHigherPrecedence (currentOp, stackOp) {
-    if (currentOp == '*' || currentOp == '/' && stackOp == '+' || stackOp == '-') {
+function hasHigherPrecedence(currentOp, stackOp) {
+    if (currentOp == '*' && (stackOp == '+' || stackOp == '-')) {
         return true;
     }
-    
+
+    if (currentOp == '/' && (stackOp == '+' || stackOp == '-')) {
+        return true;
+    }
+
     return false;
+
 }
 
 function infixToPostfix (infix) {
@@ -108,27 +137,12 @@ function infixToPostfix (infix) {
                 postfix += temp + ' ';
                 temp = '';
             }
-            
-            while (opArr.length >= 0) {
 
-                if (opArr.length == 0) {
-                    opArr.push(infix[i]);
-                    break;
-                }
-
-                else {
-                    if (hasHigherPrecedence(infix[i], peak(opArr))) {
-                        opArr.push(infix[i]);
-                        break;
-                    }
-    
-                    else {
-                        postfix += opArr.pop() + ' ';
-                    }
-                }
-
+            while (opArr.length > 0 && !hasHigherPrecedence(infix[i], peak(opArr))) {
+                postfix += opArr.pop() + ' ';
             }
-            
+
+            opArr.push(infix[i]);
         }
     }
 
@@ -144,108 +158,37 @@ function infixToPostfix (infix) {
 
 }
 
-/*function processExpression(expression) {
+function processExpression(expressionPostfix) {
 
-    //check if the expression has a number before equal sign or not
-    //this check prevents invalid expression from user
-    if (isOperator(expression[expression.length - 2])) {
-        console.log("invalid expression");
-        return;
-    }
-
-    let i = 0;
+    let result = 0;
     let numArr = [];
-    let opArr = [];
-    let temp = '';
 
-    while (expression[i] != '=') {
+    let expArr = expressionPostfix.split(' ');
 
-        if (!isOperator(expression[i])) {
-            temp += expression[i];
-            //console.log(temp);
+    for (let i = 0; i < expArr.length-1; i++) {
+
+        if (!isOperator(expArr[i])) {
+            numArr.push(expArr[i]);
         }
 
         else {
-            if (temp != '') {
-                numArr.push(temp);
-                console.log("inserting in numArr: " + temp);
-                temp = '';
-               
+            let num2 = Number(numArr.pop());
+            let num1 = Number(numArr.pop());
+
+            if (expArr[i] == '/' && num2 == 0) {
+                alert("You might be dividing by 0. Be aware!");
+                break;
             }
 
-            if (opArr.length == 0) {
-                opArr.push(expression[i]);
-                console.log("inserting in opArr: " + expression[i]);
-            }
+            result = operate(num1, expArr[i], num2);
 
-            else if (opArr.length != 0) {
-                if (!hasHigherPrecedence(expression[i], peak(opArr))) {
-                    let num2 = Number(numArr.pop());
-                    console.log("removing in numArr: " + num2);
-                    let num1 = Number(numArr.pop());
-                    console.log("removing in numArr: " + num1);
-
-                    let op = opArr.pop();
-                    console.log("removing in opArr: " + op);
-
-                    let result = operate(num1,op,num2);
-                    //console.log("perform: " + num1 + op + num2 + " equals " + result);
-
-                    numArr.push(result);
-                    console.log("inserting in numArr: " + result);
-
-                    opArr.push(expression[i]);
-                    console.log("inserting in opArr: " + expression[i]);
-                }
-
-                else {
-                    opArr.push(expression[i]);
-                    console.log("inserting in opArr: " + expression[i]);
-                }
-            }
+            numArr.push(result);
         }
-        
-        i++;
     }
 
-    if (!isOperator(temp) && temp != '') {
-        numArr.push(temp);
-        console.log("inserting in numArr: " + temp);
-        temp='';
-    }
-
-     //===for debug purpose===
-    
-    /*console.log("In num stack: ");
-    for (let j = 0; j < numArr.length; j++) {
-        console.log(numArr[j]);
-    }
-
-    console.log("in operator stack: ");
-
-    for (let j = 0; j < opArr.length; j++) {
-        console.log(opArr[j]);
-    }*/
-
-    /*while (numArr.length > 1) {
-        let num2 = Number(numArr.pop());
-        console.log("removing in numArr: " + num2);
-        let num1 = Number(numArr.pop());
-        console.log("removing in numArr: " + num1);
-
-        let op = opArr.pop();
-        console.log("removing in opArr: " + op);
-
-        let result = operate(num1,op,num2);
-
-        numArr.push(result);
-        console.log("inserting in numArr: " + result);
-    }*/
-
-    //return result;
-
+    return (numArr.pop().toFixed(3));
    
-//}
+}
 
 /*let test = [0,1,2];
 console.log(peak(test));*/
