@@ -36,6 +36,7 @@ const clear = document.querySelector('.clear');
 const clearAll = document.querySelector('.clearAll');
 const equalSign = document.querySelector('.equalSign');
 const operator = document.querySelectorAll('.operator');
+const decimal = document.querySelector('.decimal');
 
 var expression;
 var expressionPostfix;
@@ -44,22 +45,27 @@ var solution;
 
 buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
+
         display.textContent += button.textContent;
-        currentDisplay = display.textContent;
         expression = display.textContent;
     });
 });
 
 clear.addEventListener('click', (e) =>
-{
-    currentDisplay = currentDisplay.slice(0, currentDisplay.length - 1);
-    display.textContent = currentDisplay;
-    expression = display.textContent;
+{   
+    if (expression[expression.length-1] == '.') {
+        decimal.disabled = false;
+    }
+
+    expression = expression.slice(0, expression.length - 1);
+    display.textContent = expression;
 });
 
 clearAll.addEventListener('click', (e) =>
 {
     display.textContent ='';
+    displayPrevious.textContent = '';
+    decimal.disabled = false;
 });
 
 equalSign.addEventListener('click',(e) => {
@@ -89,9 +95,23 @@ equalSign.addEventListener('click',(e) => {
         display.textContent = solution;
 
     }
-    
 
+    if(display.includes('.')) {
+        decimal.disabled = false;
+    }
+
+    else {
+        decimal.disabled = true;
+    }
 });
+
+function countDecimals (value) {
+
+    if ((value % 1) != 0) 
+        return value.toString().split(".")[1].length;  
+    return 0;
+
+}
 
 function isOperator (character) {
 
@@ -150,6 +170,7 @@ function infixToPostfix (infix) {
         postfix += temp + ' ';
     }
 
+
     while (opArr.length != 0) {
         postfix += opArr.pop() + ' ';
     }
@@ -165,7 +186,10 @@ function processExpression(expressionPostfix) {
 
     let expArr = expressionPostfix.split(' ');
 
+
     for (let i = 0; i < expArr.length-1; i++) {
+
+        console.log("expArr[" + i + "]: " + expArr[i]);
 
         if (!isOperator(expArr[i])) {
             numArr.push(expArr[i]);
@@ -186,14 +210,25 @@ function processExpression(expressionPostfix) {
         }
     }
 
-    return (numArr.pop().toFixed(3));
+    result = Number(numArr.pop());
+    console.log("result: " + result);
+
+    if (countDecimals(result) > 3) {
+        
+        return result.toFixed(3);
+    }
+
+    else {
+        return result;
+    }
+
+    //return (numArr.pop().toFixed(3));
    
 }
 
-/*let test = [0,1,2];
-console.log(peak(test));*/
+decimal.addEventListener('click', (e) => {
+    display.textContent += decimal.textContent;
+    expression = display.textContent;
+    decimal.disabled = true;
+});
 
-/*console.log(hasHigherPrecedence('*', '-'));
-console.log(hasHigherPrecedence('/', '*'));
-console.log(hasHigherPrecedence('-', '*'));
-console.log(hasHigherPrecedence('-', '+'));*/
