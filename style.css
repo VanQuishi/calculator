@@ -10,7 +10,8 @@ body{
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    background-color: hsl(0, 0%, 13%);
 }
 
 .container{
@@ -19,38 +20,166 @@ body{
     align-items: center;
     text-align: center;
     justify-content: center;
+    
+    
 }
 
 .calculator {
-    border: black solid 1px;
+    border: hsl(210, 50%, 26%) solid 1px;
+    /*background-color: hsl(0, 0%, 12%);*/
+    background-color: hsl(220, 33%, 14%);
     border-radius: 10px;
     width: 360px;
-    height: 520px;
+    height: 450px;
+    padding: 20px;
     
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    display: grid;
     
 }
 
-button {
-    border: 1px solid var(--black);
-    color: var(--black);
-    font-size: 2rem;
-    border-radius: 2px;
+.scr {
+    display: flex;
+    flex-direction: column;
+    border: rgb(85, 120, 190) solid 1px;
+    text-align: end;
+    height: 100px;
+    color: white;
+}
+
+.displayPrevious {
+    padding-top: 15px;
 }
 
 .display {
     font-size: 2rem;
+    padding-top: 30px;
 }
 
-.displayPrevious, .display {
-    display: flex;
-    
+b{
+    grid-column-start: span 3;
 }
 
-.row{
-    display: flex;
-    
+.clear {
+    grid-area: clear;
+    background-color: #FFDA87;
 }
+
+.clearAll{
+    grid-area: clearAll;
+    background-color: #FFDA87;
+}
+
+.ce:hover {
+    background-color: #c75e52;
+}
+
+.b0{
+    grid-area: btn0;
+}
+
+.b1{
+    grid-area: btn1;
+}
+
+.b2{
+    grid-area: btn2;
+}
+
+.b3{
+    grid-area: btn3;
+}
+
+.b4{
+    grid-area: btn4;
+}
+
+.b5{
+    grid-area: btn5;
+}
+
+.b6{
+    grid-area: btn6;
+}
+
+.b7{
+    grid-area: btn7;
+}
+
+.b8{
+    grid-area: btn8;
+}
+
+.b9{
+    grid-area: btn9;
+}
+
+.bDot{
+    grid-area: btnDot;
+}
+
+.bPlus{
+    grid-area: btnPlus;
+}
+
+.bSub{
+    grid-area: btnSub;
+}
+
+.bMult{
+    grid-area: btnMult;
+}
+
+.bDivide{
+    grid-area: btnDivide;
+}
+
+.bEq{
+    grid-area: btnEq;
+    background-color: rgb(115, 157, 241);
+}
+
+.bEq:hover {
+    background-color: #27ae60;
+}
+
+.btn{
+    background-color: white;
+}
+
+.btn:hover{
+    background-color: rgb(248, 248, 218);
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: 
+    ". . clear clearAll"
+    "btn7 btn8 btn9 btnDivide"
+    "btn4 btn5 btn6 btnMult"
+    "btn1 btn2 btn3 btnSub"
+    "btn0 btnDot btnEq btnPlus";
+
+    border-top: none;
+    padding: 15px;
+}
+
+.buttons button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover{
+    transform: scale(1.15);
+    transition: 0.2s;
+}
+

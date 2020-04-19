@@ -21,7 +21,7 @@ function operate (a,operator,b) {
             return add(a,b);
         case '-':
             return subtract(a,b);
-        case '*':
+        case 'x':
             return multiply(a,b);
         case '/':
             return divide(a,b);
@@ -115,7 +115,7 @@ function countDecimals (value) {
 
 function isOperator (character) {
 
-    if (character == '+' || character == '-' || character == '*' || character == '/') {
+    if (character == '+' || character == '-' || character == 'x' || character == '/') {
         return true;
     }
 
@@ -127,7 +127,7 @@ function peak(arr) {
 }
 
 function hasHigherPrecedence(currentOp, stackOp) {
-    if (currentOp == '*' && (stackOp == '+' || stackOp == '-')) {
+    if (currentOp == 'x' && (stackOp == '+' || stackOp == '-')) {
         return true;
     }
 
