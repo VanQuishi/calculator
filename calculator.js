@@ -221,8 +221,6 @@ function processExpression(expressionPostfix) {
     else {
         return result;
     }
-
-    //return (numArr.pop().toFixed(3));
    
 }
 
