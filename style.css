@@ -63,6 +63,13 @@ body{
     text-align: end;
     height: 100px;
     color: white;
+    overflow: auto;
+    word-break: break-all;
+    -ms-overflow-style: none;
+}
+
+.scr::-webkit-scrollbar {
+    display: none;
 }
 
 .displayPrevious {
@@ -71,8 +78,9 @@ body{
 
 .display {
     font-size: 2rem;
-    padding-top: 30px;
+    padding-top: 25px;
 }
+
 
 b{
     grid-column-start: span 3;
